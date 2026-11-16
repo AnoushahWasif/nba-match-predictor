@@ -81,3 +81,25 @@ def paired_log_loss_difference(y, p_a, p_b, n: int = N_BOOT, seed: int = 0) -> l
     )
     idx = np.random.default_rng(seed).integers(0, len(y), (n, len(y)))
     return [round(float(v), 4) for v in np.percentile(per_game[idx].mean(axis=1), [2.5, 97.5])]
+
+
+def per_season(table: pd.DataFrame, prob: str, n: int = 500) -> pd.DataFrame:
+    """Log loss with a bootstrap interval, accuracy, and mean predicted vs actual home win rate
+    for each season. Seasons with a single outcome class can't have an AUC, so it's left out."""
+    rows = []
+    for season, g in table.groupby("season", sort=True):
+        m = metrics(g["home_win"], g[prob])
+        low, high = bootstrap(g["home_win"], g[prob], n=n)["log_loss_95"]
+        rows.append(
+            {
+                "season": season,
+                "games": len(g),
+                "log_loss": m["log_loss"],
+                "low": low,
+                "high": high,
+                "accuracy": m["accuracy"],
+                "predicted": m["mean_predicted"],
+                "won": m["home_win_rate"],
+            }
+        )
+    return pd.DataFrame(rows).set_index("season")
