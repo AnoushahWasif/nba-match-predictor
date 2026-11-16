@@ -1,0 +1,208 @@
+{
+  "split": "validation",
+  "plain_elo_log_loss": 0.6411,
+  "sets": {
+    "Elo only": {
+      "features": [
+        "elo_logit",
+        "no_home"
+      ],
+      "log_loss": 0.6425,
+      "brier": 0.2253,
+      "accuracy": 0.6342,
+      "auc": 0.6841,
+      "mean_predicted": 0.5827,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        0.0006,
+        0.0023
+      ]
+    },
+    "Elo + rest": {
+      "features": [
+        "elo_logit",
+        "home_rest_days",
+        "away_rest_days",
+        "home_b2b",
+        "away_b2b",
+        "no_home"
+      ],
+      "log_loss": 0.6396,
+      "brier": 0.224,
+      "accuracy": 0.6368,
+      "auc": 0.6874,
+      "mean_predicted": 0.5787,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        -0.0038,
+        0.0006
+      ]
+    },
+    "Elo + form": {
+      "features": [
+        "elo_logit",
+        "diff_margin_avg",
+        "diff_win_pct",
+        "diff_form_margin",
+        "diff_off_rtg",
+        "diff_def_rtg",
+        "min_games_played",
+        "no_home"
+      ],
+      "log_loss": 0.6448,
+      "brier": 0.2262,
+      "accuracy": 0.6312,
+      "auc": 0.6824,
+      "mean_predicted": 0.582,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        0.0003,
+        0.0069
+      ]
+    },
+    "form + rest, no Elo": {
+      "features": [
+        "diff_margin_avg",
+        "diff_win_pct",
+        "diff_form_margin",
+        "diff_off_rtg",
+        "diff_def_rtg",
+        "min_games_played",
+        "home_rest_days",
+        "away_rest_days",
+        "home_b2b",
+        "away_b2b",
+        "no_home"
+      ],
+      "log_loss": 0.6578,
+      "brier": 0.2301,
+      "accuracy": 0.6277,
+      "auc": 0.6695,
+      "mean_predicted": 0.5762,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        0.0063,
+        0.0265
+      ]
+    },
+    "everything": {
+      "features": [
+        "elo_logit",
+        "diff_margin_avg",
+        "diff_win_pct",
+        "diff_form_margin",
+        "diff_off_rtg",
+        "diff_def_rtg",
+        "home_rest_days",
+        "away_rest_days",
+        "home_b2b",
+        "away_b2b",
+        "min_games_played",
+        "no_home"
+      ],
+      "log_loss": 0.6418,
+      "brier": 0.2248,
+      "accuracy": 0.6342,
+      "auc": 0.6856,
+      "mean_predicted": 0.5779,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        -0.0033,
+        0.0044
+      ]
+    },
+    "everything minus elo": {
+      "features": [
+        "diff_margin_avg",
+        "diff_win_pct",
+        "diff_form_margin",
+        "diff_off_rtg",
+        "diff_def_rtg",
+        "home_rest_days",
+        "away_rest_days",
+        "home_b2b",
+        "away_b2b",
+        "min_games_played",
+        "no_home"
+      ],
+      "log_loss": 0.6578,
+      "brier": 0.2301,
+      "accuracy": 0.6277,
+      "auc": 0.6695,
+      "mean_predicted": 0.5762,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        0.0063,
+        0.0265
+      ]
+    },
+    "everything minus form": {
+      "features": [
+        "elo_logit",
+        "home_rest_days",
+        "away_rest_days",
+        "home_b2b",
+        "away_b2b",
+        "no_home"
+      ],
+      "log_loss": 0.6396,
+      "brier": 0.224,
+      "accuracy": 0.6368,
+      "auc": 0.6874,
+      "mean_predicted": 0.5787,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        -0.0038,
+        0.0006
+      ]
+    },
+    "everything minus rest": {
+      "features": [
+        "elo_logit",
+        "diff_margin_avg",
+        "diff_win_pct",
+        "diff_form_margin",
+        "diff_off_rtg",
+        "diff_def_rtg",
+        "min_games_played",
+        "no_home"
+      ],
+      "log_loss": 0.6448,
+      "brier": 0.2262,
+      "accuracy": 0.6312,
+      "auc": 0.6824,
+      "mean_predicted": 0.582,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        0.0003,
+        0.0069
+      ]
+    },
+    "plain Elo + back-to-back adjustment": {
+      "features": [
+        "elo_logit (fixed)",
+        "home_b2b",
+        "away_b2b"
+      ],
+      "coefficients": {
+        "intercept": -0.0133,
+        "home_b2b": -0.1388,
+        "away_b2b": 0.2304
+      },
+      "log_loss": 0.6393,
+      "brier": 0.224,
+      "accuracy": 0.6355,
+      "auc": 0.6869,
+      "mean_predicted": 0.5798,
+      "home_win_rate": 0.5437,
+      "minus_plain_elo_95": [
+        -0.0038,
+        0.0001
+      ]
+    }
+  },
+  "elo_plus_rest_minus_elo_only_95": [
+    -0.0052,
+    -0.0009
+  ]
+}
