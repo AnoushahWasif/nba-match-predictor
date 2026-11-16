@@ -35,7 +35,12 @@ def schedule(n_days=40, teams=6, seed=0, season="2023-24"):
     return pd.DataFrame(rows)
 
 
-FEATURE_COLS = [f"{side}_{c}" for side in ("home", "away") for c in features.TEAM_FEATURES]
+FEATURE_COLS = [
+    *(f"{side}_{c}" for side in ("home", "away") for c in features.TEAM_FEATURES),
+    "home_elo",
+    "away_elo",
+    "elo_prob",
+]
 
 
 def test_deleting_a_game_and_everything_after_changes_no_earlier_feature():
@@ -165,3 +170,27 @@ def test_no_missing_values_in_any_feature():
     out = features.game_features(schedule())
     cols = [c for c in out.columns if c.startswith(("home_", "away_", "diff_"))]
     assert not out[cols].isna().any().any()
+
+
+def test_rest_days_and_back_to_backs():
+    games = pd.DataFrame(
+        {
+            "game_id": ["a", "b", "c", "d"],
+            "season": "2023-24",
+            "date": pd.to_datetime(["2023-10-24", "2023-10-25", "2023-10-28", "2023-11-10"]),
+            "home_id": [1, 1, 1, 1],
+            "away_id": [2, 3, 2, 3],
+            "home_pts": [100] * 4,
+            "away_pts": [90] * 4,
+            "home_win": [1] * 4,
+        }
+    )
+    for side in ("home", "away"):
+        for s in STATS:
+            games[f"{side}_{s}"] = 10
+    out = features.game_features(games).set_index("game_id")
+    assert out["home_rest_days"].tolist() == [features.REST_CAP, 1, 3, features.REST_CAP]
+    assert out["home_b2b"].tolist() == [0, 1, 0, 0]
+    # Team 3's first game is b, so it's fully rested there; d is 16 days later, capped.
+    assert out.loc["b", "away_rest_days"] == features.REST_CAP
+    assert out.loc["b", "diff_rest_days"] == 1 - features.REST_CAP
