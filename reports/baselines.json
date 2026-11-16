@@ -1,0 +1,90 @@
+{
+  "split": "validation",
+  "games": 2310,
+  "baselines": {
+    "always home": {
+      "log_loss": 0.6919,
+      "brier": 0.2493,
+      "accuracy": 0.5437,
+      "auc": 0.5,
+      "mean_predicted": 0.579,
+      "home_win_rate": 0.5437,
+      "log_loss_95": [
+        0.6852,
+        0.6983
+      ],
+      "brier_95": [
+        0.246,
+        0.2525
+      ],
+      "accuracy_95": [
+        0.5234,
+        0.5645
+      ],
+      "log_loss_by_season": {
+        "2020-21": 0.6919,
+        "2021-22": 0.6918
+      },
+      "log_loss_minus_elo_95": [
+        0.0372,
+        0.0641
+      ]
+    },
+    "better record (log5)": {
+      "log_loss": 0.6525,
+      "brier": 0.2301,
+      "accuracy": 0.6108,
+      "auc": 0.6645,
+      "mean_predicted": 0.4988,
+      "home_win_rate": 0.5437,
+      "log_loss_95": [
+        0.6402,
+        0.6648
+      ],
+      "brier_95": [
+        0.2246,
+        0.2357
+      ],
+      "accuracy_95": [
+        0.5905,
+        0.6303
+      ],
+      "log_loss_by_season": {
+        "2020-21": 0.6556,
+        "2021-22": 0.6499
+      },
+      "log_loss_minus_elo_95": [
+        0.0021,
+        0.0205
+      ]
+    },
+    "Elo": {
+      "log_loss": 0.6411,
+      "brier": 0.2248,
+      "accuracy": 0.6359,
+      "auc": 0.6841,
+      "mean_predicted": 0.5775,
+      "home_win_rate": 0.5437,
+      "log_loss_95": [
+        0.6268,
+        0.6561
+      ],
+      "brier_95": [
+        0.2184,
+        0.2317
+      ],
+      "accuracy_95": [
+        0.6156,
+        0.6545
+      ],
+      "log_loss_by_season": {
+        "2020-21": 0.648,
+        "2021-22": 0.6351
+      },
+      "log_loss_minus_elo_95": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}
