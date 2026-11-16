@@ -4,7 +4,7 @@ The probability that the home team wins an NBA regular-season game, using only w
 
 The point is to do time-series features without leaking the future. Every rolling stat and rating is built from earlier games only, and tests prove it. Models are judged by season on log loss and calibration, not just accuracy.
 
-**Status:** in progress (day 2 of 10). Results will go here once there are any.
+**Status:** in progress (day 3 of 10). Results will go here once there are any.
 
 ## Planned approach
 
@@ -27,6 +27,7 @@ Team game logs from stats.nba.com through [nba_api](https://github.com/swar/nba_
 ```bash
 uv sync
 make data      # downloads 11 seasons once (under a minute), cached in data/raw
+make games     # one row per game: data/processed/games.parquet
 make lint test
 ```
 

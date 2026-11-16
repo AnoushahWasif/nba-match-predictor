@@ -182,3 +182,14 @@ def test_missing_values_on_both_sides_are_not_a_change():
     new_p["resultSets"][0]["rowSet"][0][7] = float("nan")
     old, new = collect.validate("2023-24", old_p), collect.validate("2023-24", new_p)
     assert collect.changes(old, new)["changed"] == 0
+
+
+def test_a_refresh_writes_its_change_report(tmp_path, monkeypatch):
+    monkeypatch.setenv("NBA_DATA_DIR", str(tmp_path))
+    (tmp_path / "raw").mkdir()
+    monkeypatch.setattr(collect, "collect", lambda refresh: {"2023-24": {"changed": 1}})
+    collect.main(["--refresh"])
+    (path,) = (tmp_path / "raw").glob("refresh-*.json")
+    assert json.loads(path.read_text()) == {"2023-24": {"changed": 1}}
+    collect.main([])
+    assert len(list((tmp_path / "raw").glob("refresh-*.json"))) == 1
