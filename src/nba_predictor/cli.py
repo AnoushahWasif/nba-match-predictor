@@ -88,6 +88,7 @@ def predict(
         for abbr in (home, away)
         if ((played["home_id"] == ids[abbr]) | (played["away_id"] == ids[abbr])).any()
     ]
+    last = games["date"].max()
     return {
         "home": home,
         "away": away,
@@ -96,7 +97,9 @@ def predict(
         "home_elo": round(h, 1),
         "away_elo": round(a, 1),
         "neutral": neutral,
-        "back_to_back": on_b2b,
+        # None when the day before isn't in the cache: unknown, not rested.
+        "back_to_back": on_b2b if yesterday <= last else None,
+        "season_cached": bool((games["season"] == season_of(day)).any()),
         "games_up_to": f"{games.loc[games['date'] < day, 'date'].max():%Y-%m-%d}",
     }
 
@@ -109,7 +112,14 @@ def describe(result: dict) -> str:
         f"  (Elo {result['home_elo']:.0f} vs {result['away_elo']:.0f})",
         f"  ratings use games up to {result['games_up_to']}",
     ]
-    if result["back_to_back"]:
+    if not result["season_cached"]:
+        lines.append(
+            f"  note: {season_of(pd.Timestamp(result['date']))} isn't in the cache, so these are "
+            "last season's ratings pulled toward the mean"
+        )
+    if result["back_to_back"] is None:
+        lines.append("  note: the day before isn't in the cache, so back-to-backs are unknown")
+    elif result["back_to_back"]:
         lines.append(
             f"  note: {', '.join(result['back_to_back'])} played the day before. Plain Elo "
             "ignores this; on validation, tired teams did a few points worse than Elo said."
