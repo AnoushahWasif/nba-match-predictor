@@ -1,0 +1,129 @@
+{
+  "split": "validation",
+  "features": [
+    "elo_logit",
+    "diff_margin_avg",
+    "diff_win_pct",
+    "diff_form_margin",
+    "diff_off_rtg",
+    "diff_def_rtg",
+    "home_rest_days",
+    "away_rest_days",
+    "home_b2b",
+    "away_b2b",
+    "min_games_played",
+    "no_home"
+  ],
+  "results": {
+    "logistic C=0.01": {
+      "log_loss": 0.6426,
+      "brier": 0.2251,
+      "accuracy": 0.6346,
+      "auc": 0.6843,
+      "mean_predicted": 0.5781,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 0.22
+    },
+    "logistic C=0.1": {
+      "log_loss": 0.6418,
+      "brier": 0.2248,
+      "accuracy": 0.6342,
+      "auc": 0.6856,
+      "mean_predicted": 0.5779,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 0.08
+    },
+    "logistic C=1.0": {
+      "log_loss": 0.6418,
+      "brier": 0.2248,
+      "accuracy": 0.6329,
+      "auc": 0.6858,
+      "mean_predicted": 0.5779,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 0.08
+    },
+    "logistic C=10.0": {
+      "log_loss": 0.6418,
+      "brier": 0.2248,
+      "accuracy": 0.6333,
+      "auc": 0.6858,
+      "mean_predicted": 0.5779,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 0.09
+    },
+    "boosting depth=2 iters=100": {
+      "log_loss": 0.6429,
+      "brier": 0.2254,
+      "accuracy": 0.6377,
+      "auc": 0.6842,
+      "mean_predicted": 0.5806,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 0.45
+    },
+    "boosting depth=2 iters=300": {
+      "log_loss": 0.6423,
+      "brier": 0.225,
+      "accuracy": 0.6433,
+      "auc": 0.6863,
+      "mean_predicted": 0.5787,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 1.19
+    },
+    "boosting depth=3 iters=100": {
+      "log_loss": 0.6441,
+      "brier": 0.2259,
+      "accuracy": 0.6359,
+      "auc": 0.6822,
+      "mean_predicted": 0.5804,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 0.6
+    },
+    "boosting depth=3 iters=300": {
+      "log_loss": 0.6454,
+      "brier": 0.2264,
+      "accuracy": 0.6372,
+      "auc": 0.6816,
+      "mean_predicted": 0.5785,
+      "home_win_rate": 0.5437,
+      "fit_seconds": 1.39
+    }
+  },
+  "elo": {
+    "log_loss": 0.6411,
+    "brier": 0.2248,
+    "accuracy": 0.6359,
+    "auc": 0.6841,
+    "mean_predicted": 0.5775,
+    "home_win_rate": 0.5437
+  },
+  "best": "logistic C=0.1",
+  "best_95": {
+    "log_loss_95": [
+      0.6258,
+      0.6581
+    ],
+    "brier_95": [
+      0.2178,
+      0.232
+    ],
+    "accuracy_95": [
+      0.6151,
+      0.6537
+    ]
+  },
+  "best_minus_elo_95": [
+    -0.0033,
+    0.0044
+  ],
+  "best_logistic": "logistic C=0.1",
+  "best_logistic_minus_elo_95": [
+    -0.0033,
+    0.0044
+  ],
+  "best_boosting": "boosting depth=2 iters=300",
+  "best_boosting_minus_elo_95": [
+    -0.0036,
+    0.0059
+  ],
+  "model_sha256": "4519b21b5553f31f783303b136e55969b46f88e451c5b47c0700aeee3b9aaaf8"
+}
