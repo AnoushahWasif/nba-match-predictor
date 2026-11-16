@@ -90,10 +90,13 @@ def to_games(teams: pd.DataFrame, season: str) -> tuple[pd.DataFrame, list[dict]
     )
     sizes = t.groupby("GAME_ID").size()
     good_ids = set(m.loc[ok, "GAME_ID"]) & set(sizes[sizes == 2].index)
-    bad = [
-        {"game_id": game_id, "reason": check_game(rows) or "rows didn't pair up"}
-        for game_id, rows in teams[~teams["GAME_ID"].isin(good_ids)].groupby("GAME_ID")
-    ]
+    bad = []
+    for game_id, rows in teams[~teams["GAME_ID"].isin(good_ids)].groupby("GAME_ID"):
+        reason = check_game(rows)
+        if reason is None:
+            # The two checks are meant to be the same rules; a mismatch is a bug, not bad data.
+            raise AssertionError(f"{game_id}: rejected by the merge but passes check_game")
+        bad.append({"game_id": game_id, "reason": reason})
     if len(bad) > MAX_BAD_PER_SEASON:
         raise GamesError(f"{season}: {len(bad)} games couldn't be read, e.g. {bad[:3]}")
     m = m[m["GAME_ID"].isin(good_ids)]

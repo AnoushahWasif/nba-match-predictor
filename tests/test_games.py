@@ -88,6 +88,7 @@ def test_unreadable_games_are_dropped_with_a_reason(name):
     ]
     out, bad = games.to_games(frame(*BAD[name], *good), "2023-24")
     assert len(out) == 1 and len(bad) == 1 and bad[0]["game_id"] == "0022300001"
+    assert bad[0]["reason"]
 
 
 def test_too_many_bad_games_fail_the_build():
