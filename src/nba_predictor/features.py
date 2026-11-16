@@ -7,14 +7,20 @@ same thing here; `team_games` checks that rather than assuming it.
     uv run python -m nba_predictor.features
 """
 
+import json
 from pathlib import Path
 
 import pandas as pd
 
-from nba_predictor import collect
+from nba_predictor import collect, elo
 
 WINDOW = 10
-TEAM_FEATURES = ["games_played", "win_pct", "margin_avg", "form_margin", "off_rtg", "def_rtg"]
+# Rest beyond 4 days (including the off-season) is treated as fully rested.
+REST_CAP = 4
+TEAM_FEATURES = [
+    "games_played", "win_pct", "margin_avg", "form_margin",
+    "off_rtg", "def_rtg", "rest_days", "b2b",
+]  # fmt: skip
 
 
 def possessions(fga, oreb, tov, fta):
@@ -83,11 +89,18 @@ def add_form(long: pd.DataFrame, window: int = WINDOW) -> pd.DataFrame:
     league_rtg = out["date"].map(league)
     for col in ("off_rtg", "def_rtg"):
         out[col] = out[col].fillna(league_rtg)
+    # Days since the team's previous game; the first game of a season counts as fully rested.
+    previous = out.groupby(["team_id", "season"], sort=False)["date"].shift(1)
+    out["rest_days"] = (out["date"] - previous).dt.days.clip(upper=REST_CAP).fillna(REST_CAP)
+    out["b2b"] = (out["rest_days"] == 1).astype(int)
     return out.fillna({"win_pct": 0.5, "margin_avg": 0.0, "form_margin": 0.0})
 
 
-def game_features(games: pd.DataFrame, window: int = WINDOW) -> pd.DataFrame:
-    """The games table with each side's pre-game features and their home-minus-away differences."""
+def game_features(
+    games: pd.DataFrame, window: int = WINDOW, elo_params: elo.EloParams | None = None
+) -> pd.DataFrame:
+    """The games table with each side's pre-game features, their home-minus-away differences,
+    and the Elo ratings and win probability before the game."""
     form = add_form(team_games(games), window).set_index(["game_id", "team_id"])[TEAM_FEATURES]
     out = games.copy()
     for side in ("home", "away"):
@@ -97,12 +110,19 @@ def game_features(games: pd.DataFrame, window: int = WINDOW) -> pd.DataFrame:
             out[f"{side}_{col}"] = side_form[col].to_numpy()
     for col in TEAM_FEATURES:
         out[f"diff_{col}"] = out[f"home_{col}"] - out[f"away_{col}"]
+    out = out.join(elo.ratings(games, elo_params or elo.EloParams()))
+    out["diff_elo"] = out["home_elo"] - out["away_elo"]
     return out
 
 
-def build(processed: Path | None = None) -> pd.DataFrame:
+def build(
+    processed: Path | None = None, elo_report: Path = Path("reports/elo.json")
+) -> pd.DataFrame:
     processed = processed or collect.data_dir() / "processed"
-    out = game_features(pd.read_parquet(processed / "games.parquet"))
+    if not elo_report.exists():
+        raise FileNotFoundError(f"{elo_report} is missing; run `make elo` first")
+    params = elo.EloParams(**json.loads(elo_report.read_text())["params"])
+    out = game_features(pd.read_parquet(processed / "games.parquet"), elo_params=params)
     out.to_parquet(processed / "features.parquet", index=False)
     return out
 
