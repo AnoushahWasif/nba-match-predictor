@@ -1,4 +1,4 @@
-.PHONY: install lint format test data games elo features baselines
+.PHONY: install lint format test data games elo features baselines train
 
 install:
 	uv sync
@@ -28,3 +28,6 @@ elo:
 
 baselines:
 	uv run python -m nba_predictor.baselines
+
+train:
+	uv run python -m nba_predictor.train
