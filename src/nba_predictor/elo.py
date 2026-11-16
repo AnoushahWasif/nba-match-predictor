@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 
 from nba_predictor import collect
+from nba_predictor.evaluate import log_loss
 
 MEAN = 1500.0
 TRAIN_LAST = "2019-20"
@@ -82,11 +83,6 @@ def ratings(games: pd.DataFrame, params: EloParams = EloParams()) -> pd.DataFram
         {"home_elo": home_pre, "away_elo": away_pre, "elo_prob": prob}, index=g.index
     )
     return out.loc[games.index]
-
-
-def log_loss(y, p, eps: float = 1e-12) -> float:
-    y, p = np.asarray(y, float), np.clip(np.asarray(p, float), eps, 1 - eps)
-    return float(-np.mean(y * np.log(p) + (1 - y) * np.log(1 - p)))
 
 
 GRID = {
