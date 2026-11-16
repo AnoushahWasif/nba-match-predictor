@@ -61,7 +61,10 @@ class EloRestAdjustment:
             z = offset + design @ b
             return float(np.mean(np.logaddexp(0, z) - y * z))
 
-        self.coef_ = minimize(loss, np.zeros(design.shape[1]), method="BFGS").x
+        result = minimize(loss, np.zeros(design.shape[1]), method="BFGS")
+        if not result.success:
+            raise RuntimeError(f"back-to-back adjustment didn't converge: {result.message}")
+        self.coef_ = result.x
         return self
 
     def predict_proba(self, x: pd.DataFrame) -> np.ndarray:

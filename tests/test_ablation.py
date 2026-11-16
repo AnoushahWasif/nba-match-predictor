@@ -47,3 +47,13 @@ def test_with_no_rest_effect_the_adjustment_stays_near_plain_elo():
     assert np.abs(m.coef_).max() < 0.08
     p = m.predict_proba(x)
     assert p.shape == (len(x), 2) and np.allclose(p.sum(axis=1), 1)
+
+
+def test_a_fit_that_does_not_converge_raises(monkeypatch):
+    class Failed:
+        success, message, x = False, "stopped early", np.zeros(3)
+
+    monkeypatch.setattr(ablation, "minimize", lambda *a, **k: Failed())
+    x, rng = frame(100)
+    with pytest.raises(RuntimeError, match="didn't converge"):
+        ablation.EloRestAdjustment().fit(x, rng.integers(0, 2, 100))
