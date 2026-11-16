@@ -1,4 +1,4 @@
-.PHONY: install lint format test data
+.PHONY: install lint format test data games
 
 install:
 	uv sync
@@ -16,3 +16,6 @@ test:
 
 data:
 	uv run python -m nba_predictor.collect
+
+games:
+	uv run python -m nba_predictor.games

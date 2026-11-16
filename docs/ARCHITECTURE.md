@@ -47,7 +47,7 @@ The output is a reproducible pipeline, notebooks, reports, and an `nba` CLI.
 | Component | Responsibility |
 |---|---|
 | `collect.py` | One request per season, at least 1 s between requests, a 60 s timeout (the first request of a session took 23 s), 3 tries with backoff for transport errors (a bad response isn't retried), a 20 MB cap, cache plus manifest. `--refresh` downloads again and reports rows added, removed and changed. Never called in CI |
-| `games.py` | Team rows to one game row (home and away from the `MATCHUP` text, "vs." and "@"), with the two-rows-per-game check |
+| `games.py` | Team rows to one game row (home and away from the `MATCHUP` text, "vs." and "@"), with the two-rows-per-game check. More than 3 unreadable games in a season fails the build. Neutral-site games (both rows "away @ home") and bubble games are flagged |
 | `features.py` | Rolling form, rest, back-to-backs and Elo, from past games only |
 | `train.py` / `evaluate.py` | Season split, baselines, models, calibration, bootstrap, run metadata |
 | `model_store.py` | Hash-checked model save and load: the pickle is only loaded from bytes whose SHA-256 matches |
