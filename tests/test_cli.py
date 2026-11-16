@@ -164,3 +164,13 @@ def test_help_exits_cleanly(capsys):
         cli.main(["--help"])
     assert exc.value.code == 0
     assert "predict" in capsys.readouterr().out
+
+
+def test_dates_past_the_cache_say_what_is_unknown():
+    out = cli.predict(games(), PARAMS, "BOS", "NYK", pd.Timestamp("2024-11-01"))
+    assert out["back_to_back"] is None and out["season_cached"] is False
+    text = cli.describe(out)
+    assert "2024-25 isn't in the cache" in text and "back-to-backs are unknown" in text
+    inside = cli.predict(games(), PARAMS, "BOS", "NYK", pd.Timestamp("2023-11-10"))
+    assert inside["season_cached"] and inside["back_to_back"] is not None
+    assert "isn't in the cache" not in cli.describe(inside)
