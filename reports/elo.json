@@ -1,0 +1,52 @@
+{
+  "params": {
+    "k": 15.0,
+    "home": 60.0,
+    "carry": 0.8,
+    "mov": true
+  },
+  "train_log_loss": 0.61234,
+  "grid_size": 160,
+  "top_5": [
+    {
+      "k": 15,
+      "home": 60,
+      "carry": 0.8,
+      "mov": true,
+      "log_loss": 0.61234
+    },
+    {
+      "k": 15,
+      "home": 60,
+      "carry": 0.65,
+      "mov": true,
+      "log_loss": 0.6126
+    },
+    {
+      "k": 20,
+      "home": 60,
+      "carry": 0.65,
+      "mov": true,
+      "log_loss": 0.61288
+    },
+    {
+      "k": 15,
+      "home": 80,
+      "carry": 0.8,
+      "mov": true,
+      "log_loss": 0.61295
+    },
+    {
+      "k": 20,
+      "home": 60,
+      "carry": 0.8,
+      "mov": true,
+      "log_loss": 0.61296
+    }
+  ],
+  "best_on_grid_edge": {
+    "k": false,
+    "home": false,
+    "carry": false
+  }
+}

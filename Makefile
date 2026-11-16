@@ -1,4 +1,4 @@
-.PHONY: install lint format test data games features
+.PHONY: install lint format test data games elo features
 
 install:
 	uv sync
@@ -22,3 +22,6 @@ games:
 
 features:
 	uv run python -m nba_predictor.features
+
+elo:
+	uv run python -m nba_predictor.elo
