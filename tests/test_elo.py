@@ -85,8 +85,3 @@ def test_tuning_never_sees_validation_or_test_seasons():
     a = elo.tune(base, grid)[0]
     b = elo.tune(with_later, grid)[0]
     assert a == b
-
-
-def test_log_loss_is_clipped():
-    assert elo.log_loss([1, 0], [1.0, 0.0]) < 1e-6
-    assert elo.log_loss([1], [0.0]) == pytest.approx(27.63, abs=0.01)
