@@ -1,0 +1,135 @@
+{
+  "split": "test",
+  "seasons": [
+    "2022-23",
+    "2023-24",
+    "2024-25"
+  ],
+  "games": 3690,
+  "plain Elo (CLI)": {
+    "log_loss": 0.6239,
+    "brier": 0.2175,
+    "accuracy": 0.6493,
+    "auc": 0.6979,
+    "mean_predicted": 0.5747,
+    "home_win_rate": 0.5558,
+    "log_loss_95": [
+      0.612,
+      0.636
+    ],
+    "brier_95": [
+      0.2122,
+      0.2229
+    ],
+    "accuracy_95": [
+      0.6344,
+      0.665
+    ]
+  },
+  "Elo + back-to-back adjustment (declared secondary)": {
+    "log_loss": 0.6212,
+    "brier": 0.2163,
+    "accuracy": 0.6564,
+    "auc": 0.7028,
+    "mean_predicted": 0.5762,
+    "home_win_rate": 0.5558,
+    "log_loss_95": [
+      0.6096,
+      0.633
+    ],
+    "brier_95": [
+      0.211,
+      0.2215
+    ],
+    "accuracy_95": [
+      0.6415,
+      0.6724
+    ]
+  },
+  "always home": {
+    "log_loss": 0.688,
+    "brier": 0.2474,
+    "accuracy": 0.5558,
+    "auc": 0.5,
+    "mean_predicted": 0.579,
+    "home_win_rate": 0.5558,
+    "log_loss_95": [
+      0.6831,
+      0.6927
+    ],
+    "brier_95": [
+      0.245,
+      0.2498
+    ],
+    "accuracy_95": [
+      0.5409,
+      0.5713
+    ]
+  },
+  "adjustment_minus_elo_95": [
+    -0.0041,
+    -0.0013
+  ],
+  "elo_by_season": {
+    "2022-23": {
+      "games": 1230,
+      "log_loss": 0.6459,
+      "low": 0.6262,
+      "high": 0.6648,
+      "accuracy": 0.6333,
+      "predicted": 0.5769,
+      "won": 0.5805
+    },
+    "2023-24": {
+      "games": 1230,
+      "log_loss": 0.6138,
+      "low": 0.5933,
+      "high": 0.6344,
+      "accuracy": 0.6488,
+      "predicted": 0.5731,
+      "won": 0.5431
+    },
+    "2024-25": {
+      "games": 1230,
+      "log_loss": 0.6122,
+      "low": 0.591,
+      "high": 0.6342,
+      "accuracy": 0.6659,
+      "predicted": 0.5742,
+      "won": 0.5439
+    }
+  },
+  "day_9_hypotheses": {
+    "favourites in either team's first 10 games": {
+      "games": 140,
+      "predicted": 0.7718,
+      "won": 0.7929
+    },
+    "favourites past 10 games": {
+      "games": 1072,
+      "predicted": 0.783,
+      "won": 0.764
+    },
+    "favourite on a back-to-back, underdog rested": {
+      "games": 138,
+      "predicted": 0.7846,
+      "won": 0.7464
+    }
+  },
+  "run": {
+    "git_commit": "70b1c13d0be4506b13d42e5c7779feee991923ec",
+    "raw_sha256": {
+      "2014-15": "14aabb688426d2c71ec77f99b540d540badb55725633015afb786446228e3d81",
+      "2015-16": "ba3ae1d0049ae063b60c5b0bd5e7d8c6e9b4fe3352e1e7690dcefb32f18c1015",
+      "2016-17": "7a77312a4d854e89537fb9712a664f1b51792b108a4ba10bc4e175d94058ad19",
+      "2017-18": "3aea834a1f71826035b6a7cb50e69a6dcb6635094080ab61cef631a07bc8760c",
+      "2018-19": "74c238da0e5c28db60fda25a817ac9930bcbd1627bcbc102f0a289d1ee6ee786",
+      "2019-20": "e92b0bd109bdc3cae80e18664ff83c449eae07baf9081bcfd74e5415afd92bec",
+      "2020-21": "abb2484370d7ef3433afcdc296a5494dd77f89557b863bc2336a929c8a165d20",
+      "2021-22": "aef3363af184c16a7114908b30e10bfb18bf760cd736af471389a6f4df4a9943",
+      "2022-23": "599e98cb3264294fade471afc8b96146f862c42ae2d904d0c491a5a625be241e",
+      "2023-24": "1585e606f5404a199bfb7f2433014f3018010296074b01f692ee229689ca5686",
+      "2024-25": "0c46c29ce9536f4adbd5ce3eeec2b366ab15b29de29271ec2101deb6d9eb2f7d"
+    }
+  }
+}
