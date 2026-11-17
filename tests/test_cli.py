@@ -174,3 +174,17 @@ def test_dates_past_the_cache_say_what_is_unknown():
     inside = cli.predict(games(), PARAMS, "BOS", "NYK", pd.Timestamp("2023-11-10"))
     assert inside["season_cached"] and inside["back_to_back"] is not None
     assert "isn't in the cache" not in cli.describe(inside)
+
+
+def test_august_games_of_a_cached_season_stay_in_it():
+    # The 2020 bubble: 2019-20 games were played in August, which the month rule calls 2020-21.
+    g = games(days=12, start="2020-07-30", season="2019-20")
+    day = pd.Timestamp("2020-08-11")
+    assert cli.season_of(day) == "2020-21"
+    assert cli.season_of(day, g) == "2019-20"
+    out = cli.predict(g, PARAMS, "BOS", "NYK", day)
+    # No between-season pull partway through the season.
+    assert out["home_elo"] == round(elo.current(g, day, "2019-20", PARAMS)[1], 1)
+    assert out["season"] == "2019-20" and out["season_cached"]
+    # Past the cache the month rule still decides.
+    assert cli.season_of(pd.Timestamp("2020-12-22"), g) == "2020-21"

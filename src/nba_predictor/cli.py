@@ -25,8 +25,15 @@ class UsageError(ValueError):
     pass
 
 
-def season_of(day: pd.Timestamp) -> str:
-    """The season a date belongs to: seasons start in October, so August onwards is the next."""
+def season_of(day: pd.Timestamp, games: pd.DataFrame | None = None) -> str:
+    """The season a date belongs to. Inside a cached season's first and last game it's that
+    season: the month alone gets the 2020 bubble wrong (2019-20 games up to 14 Aug 2020).
+    Outside the cache, seasons start in October, so August onwards is the next."""
+    if games is not None:
+        spans = games.groupby("season")["date"].agg(["min", "max"])
+        inside = spans[(spans["min"] <= day) & (day <= spans["max"])]
+        if len(inside) == 1:
+            return str(inside.index[0])
     start = day.year if day.month >= 8 else day.year - 1
     return f"{start}-{str(start + 1)[-2:]}"
 
@@ -78,7 +85,8 @@ def predict(
         raise UsageError("a team can't play itself")
     if day <= games["date"].min():
         raise UsageError(f"no games before {day:%Y-%m-%d} in the cache")
-    rating = elo.current(games, day, season_of(day), params)
+    season = season_of(day, games)
+    rating = elo.current(games, day, season, params)
     h, a = rating[ids[home]], rating[ids[away]]
     prob = elo.expected(h + (0.0 if neutral else params.home) - a)
     yesterday = day - pd.Timedelta(days=1)
@@ -99,7 +107,8 @@ def predict(
         "neutral": neutral,
         # None when the day before isn't in the cache: unknown, not rested.
         "back_to_back": on_b2b if yesterday <= last else None,
-        "season_cached": bool((games["season"] == season_of(day)).any()),
+        "season": season,
+        "season_cached": bool((games["season"] == season).any()),
         "games_up_to": f"{games.loc[games['date'] < day, 'date'].max():%Y-%m-%d}",
     }
 
@@ -114,7 +123,7 @@ def describe(result: dict) -> str:
     ]
     if not result["season_cached"]:
         lines.append(
-            f"  note: {season_of(pd.Timestamp(result['date']))} isn't in the cache, so these are "
+            f"  note: {result['season']} isn't in the cache, so these are "
             "last season's ratings pulled toward the mean"
         )
     if result["back_to_back"] is None:

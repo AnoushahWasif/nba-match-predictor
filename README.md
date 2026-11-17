@@ -117,7 +117,7 @@ make lint test
 src/nba_predictor/  collect, games, features, elo, evaluate, baselines, train, ablation, holdout, cli
 notebooks/          01 home advantage · 02 features · 03 rest and Elo · 04 baselines · 05 models · 06 ablation · 07 seasons and upsets
 reports/            JSON results (including holdout.json) and figures
-tests/              109 tests, including the leakage tests, bad API responses and CLI errors
+tests/              110 tests, including the leakage tests, bad API responses and CLI errors
 docs/               ARCHITECTURE.md
 ```
 
