@@ -79,6 +79,7 @@ flowchart LR
 | 9 | The test seasons are scored once, by a command that refuses a second run | Tuning after seeing the test score would turn it into one more validation set |
 | 10 | Models are saved with a SHA-256 manifest and loaded only from the checked bytes | A pickle runs code when loaded |
 | 11 | A model replaces Elo only if it beats Elo's validation log loss with a paired 95% interval clear of zero | On day 7, logistic regression and boosting with every feature landed within 0.004 of Elo (0.6418 vs 0.6411, interval −0.003 to +0.004). Without a measurable gain, the simpler model wins |
+| 12 | The CLI uses plain Elo. Plain Elo plus a back-to-back adjustment (Elo's log-odds kept fixed, only the shifts learned) is declared before the test set is opened as the one secondary model scored on it | Day 8 ablation: rest adds information (−0.0052 to −0.0009 inside the regression), but against plain Elo the adjustment's interval is −0.0038 to +0.0001, short of decision 11's bar. Form features add nothing once Elo is in |
 
 ## Threat model (STRIDE)
 
