@@ -49,6 +49,23 @@ def ratings(games: pd.DataFrame, params: EloParams = EloParams()) -> pd.DataFram
     Games are processed in date order. A team plays at most once a day (features.team_games
     checks), so within a date the order doesn't matter: no game's result can reach another
     game on the same date."""
+    pre, _, _ = _run(games, params)
+    return pre.loc[games.index]
+
+
+def current(
+    games: pd.DataFrame, before: pd.Timestamp, season: str, params: EloParams = EloParams()
+) -> dict[int, float]:
+    """Every team's rating going into a game on `before` in `season`: all earlier games played,
+    and the between-season pull applied if the team hasn't played yet in that season."""
+    _, rating, season_of = _run(games[games["date"] < before], params)
+    return {
+        team: r if season_of[team] == season else MEAN + params.carry * (r - MEAN)
+        for team, r in rating.items()
+    }
+
+
+def _run(games: pd.DataFrame, params: EloParams):
     g = games.sort_values(["date", "game_id"])
     home_ids = g["home_id"].to_numpy(int)
     away_ids = g["away_id"].to_numpy(int)
@@ -79,10 +96,10 @@ def ratings(games: pd.DataFrame, params: EloParams = EloParams()) -> pd.DataFram
             step *= mov_multiplier(margin, diff if margin > 0 else -diff)
         rating[h] += step
         rating[a] -= step
-    out = pd.DataFrame(
+    pre = pd.DataFrame(
         {"home_elo": home_pre, "away_elo": away_pre, "elo_prob": prob}, index=g.index
     )
-    return out.loc[games.index]
+    return pre, rating, season_of
 
 
 GRID = {
