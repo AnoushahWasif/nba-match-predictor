@@ -190,8 +190,15 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--refresh", action="store_true", help="download cached seasons again")
     args = parser.parse_args(argv)
-    for season, result in collect(args.refresh).items():
+    report = collect(args.refresh)
+    for season, result in report.items():
         print(season, result)
+    if args.refresh:
+        # The refresh overwrites the cache, so this file is the only record of what changed.
+        raw = data_dir() / "raw"
+        path = raw / f"refresh-{datetime.now(UTC):%Y%m%dT%H%M%SZ}.json"
+        path.write_text(json.dumps(report, indent=2))
+        print("wrote", path)
 
 
 if __name__ == "__main__":
