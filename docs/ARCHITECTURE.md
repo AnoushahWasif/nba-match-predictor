@@ -39,7 +39,7 @@ The output is a reproducible pipeline, notebooks, reports, and an `nba` CLI.
 | Split | Train 2014-15 to 2019-20; validation 2020-21 and 2021-22; test 2022-23 to 2024-25, scored once | Time order. A random split would let a model learn a team's season from its future games |
 | Metrics | Log loss, Brier score, a reliability curve, accuracy; per-season results with bootstrap intervals; paired comparisons between models | One season (about 1,230 games) has a 95% accuracy interval of roughly ±2.7 points, so single-season differences need care |
 | Baselines | Always pick home; the better win % so far this season; Elo alone | A model has to beat Elo to be worth its complexity |
-| Elo | From scratch: K, home bonus and the between-season pull toward the mean, tuned on validation | Small, explainable, and hard to beat |
+| Elo | From scratch: K, home bonus and the between-season pull toward the mean, tuned on the training seasons (2014-15 as burn-in); no home bonus on neutral courts or in the bubble | Small, explainable, and hard to beat. Tuning on training keeps validation clean for comparing models |
 | Models | Logistic regression and gradient boosting (scikit-learn's `HistGradientBoostingClassifier`); calibration checked, not assumed | A simple model may well be enough. The ablation shows which features earn their place |
 
 ## Components
@@ -72,7 +72,7 @@ flowchart LR
 | 2 | Split by season: 6 train, 2 validation, 3 test | Predictions are always about the future. Three test seasons give about 3,700 games, for a 95% accuracy interval of about ±1.5 points |
 | 3 | Log loss and Brier score are the main metrics | The CLI outputs a probability, so it has to be calibrated, not just right more often than not |
 | 4 | Every feature is shifted per team and computed only from strictly earlier dates, with a deletion test | Leakage is the main way this kind of project fools itself |
-| 5 | Elo is written from scratch, with its parameters tuned on validation | It's a strong baseline, and building it shows how the rating updates |
+| 5 | Elo is written from scratch, with its parameters tuned on the training seasons. Result: K 15, home bonus 60, carry-over 0.8, margin of victory on | It's a strong baseline, and building it shows how the rating updates. Changed from "tuned on validation" (day 5) so validation is only used once, to compare models |
 | 6 | No player, injury or odds data | No free, licensed source, and out of scope for 10 days. It's listed as the main limitation |
 | 7 | The raw API responses are cached with hashes; CI never calls the API | Polite to the source, reproducible, and CI runners are often blocked by stats.nba.com |
 | 8 | Teams are keyed by `TEAM_ID` | Names and abbreviations can change, even if none do in this range |
