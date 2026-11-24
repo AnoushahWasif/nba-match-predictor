@@ -7,6 +7,7 @@ from nba_predictor.evaluate import (
     log_loss,
     metrics,
     paired_log_loss_difference,
+    per_season,
     split,
     wilson,
 )
@@ -79,3 +80,18 @@ def test_paired_difference_signs():
     low, high = paired_log_loss_difference(y, good, bad, n=300)
     assert high < 0
     assert paired_log_loss_difference(y, good, good, n=50) == [0.0, 0.0]
+
+
+def test_per_season_has_one_row_per_season_and_brackets_log_loss():
+    rng = np.random.default_rng(3)
+    t = pd.DataFrame(
+        {
+            "season": ["2020-21"] * 300 + ["2021-22"] * 200,
+            "p": rng.uniform(0.3, 0.8, 500),
+        }
+    )
+    t["home_win"] = (rng.uniform(size=500) < t["p"]).astype(int)
+    out = per_season(t, "p", n=200)
+    assert list(out.index) == ["2020-21", "2021-22"]
+    assert out["games"].tolist() == [300, 200]
+    assert ((out["low"] <= out["log_loss"]) & (out["log_loss"] <= out["high"])).all()
